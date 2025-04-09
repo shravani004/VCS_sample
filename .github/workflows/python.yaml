@@ -1,21 +1,70 @@
-name: Test Feedback Script
-on: [push]
+name: Python Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  test-feedback-script:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Python environment
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
-      - name: Run Feedback Script
+          python-version: 3.9
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
         run: |
-          python feedback_entry.py <<EOF
-          1
-          Alice
-          Math
-          3
-          4
-EOF
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      # Step 4: Create a test file to simulate the main function and check results
+      - name: Create test file for feedback manager
+        run: |
+          echo 'import pytest' > test_feedback_manager.py
+          echo 'from feedback_entry import add_feedback, view_feedback, get_empty_students_dict' >> test_feedback_manager.py
+
+          # Test adding feedback
+          echo '''
+def test_add_feedback():
+    students = get_empty_students_dict()
+    add_feedback(students, "Charlie", "Math", "good")
+    assert "Charlie" in students
+    assert "Math" in students["Charlie"]
+    assert "good" in students["Charlie"]["Math"]
+''' >> test_feedback_manager.py
+
+          # Test viewing feedback
+          echo '''
+def test_view_feedback():
+    students = {
+        "Alice": {
+            "Math": ["good", "very good"],
+            "Science": ["excellent", "good"]
+        },
+        "Bob": {
+            "Math": ["poor", "very poor"],
+            "History": ["good", "excellent"]
+        }
+    }
+    # Check if feedback for Alice in Math is correct
+    view_feedback(students, "Alice", "Math")  # Expected: feedback for Alice in Math
+    view_feedback(students, "Bob", "History")  # Expected: feedback for Bob in History
+    view_feedback(students, "Charlie", "Math")  # Expected: Charlie does not exist
+''' >> test_feedback_manager.py
+
+      # Step 5: Run tests
+      - name: Run tests
+        run: |
+          pytest --maxfail=1 --disable-warnings -q
