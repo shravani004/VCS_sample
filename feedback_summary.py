@@ -17,3 +17,20 @@ def summarize_feedback(students):
         print("Feedback distribution:")
         for ftype in feedback_types:
             print(f"  {ftype.title()}: {feedback_count[ftype]}")
+
+def main():
+    students = {
+        "Alice": {
+            "Math": ["good", "very good", "excellent"],
+            "Science": ["poor", "good"]
+        },
+        "Bob": {
+            "Math": ["very poor", "poor"],
+            "Science": ["good", "very good"]
+        }
+    }
+
+    summarize_feedback(students)
+
+if __name__ == "__main__":
+    main()
