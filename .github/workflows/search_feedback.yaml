@@ -1,0 +1,15 @@
+name: Test Search Feedback Script
+on: [push]
+jobs:
+  test-search-feedback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run Python script
+        run: |
+          python search_feedback.py
