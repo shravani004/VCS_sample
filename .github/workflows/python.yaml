@@ -10,9 +10,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Run all .py files
+      - name: Run script with arguments
         run: |
           for file in $(find . -name "*.py"); do
             echo "Running $file"
-            python "$file"
+            # Example: Run with specific arguments
+            # python "$file" --action add --student John --subject Math --feedback good
+            
+            # For testing purposes, you might want to run without arguments
+            # or ensure that the script handles missing arguments gracefully.
+            python "$file" --action view
           done
