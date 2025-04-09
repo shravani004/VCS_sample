@@ -10,15 +10,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Run script with expect
+      - name: Run Python script
         run: |
-          expect -c "
-            spawn python your_script.py
-            expect \"Choose an option: \"
-            send \"3\r\"
-            interact
-          "
-            
-            calculate_average_score(students)
-            calculate_average_score_for_all_subjects(students)
-          "
+          python score_calculator.py
