@@ -1,6 +1,7 @@
+# feedback_entry.py
+
 import score_calculator
 
-# Function to add feedback to students data
 def add_feedback(students, student_name, subject, feedback):
     if student_name not in students:
         students[student_name] = {}
@@ -11,7 +12,6 @@ def add_feedback(students, student_name, subject, feedback):
     students[student_name][subject].append(feedback)
     print(f"Feedback added for '{student_name}' in '{subject}'.")
 
-# Function to view feedback based on student name and subject
 def view_feedback(students, student_name=None, subject=None):
     if student_name:
         if student_name in students:
@@ -40,74 +40,49 @@ def view_feedback(students, student_name=None, subject=None):
                     print(f"{i}. {feedback}")
                 print()  # Empty line for better readability
 
-# Default main function without user input
+def calculate_average_score(students):
+    # Example calculation; implement actual logic here
+    for student, subjects in students.items():
+        print(f"Average score for {student}:")
+        for subject, feedbacks in subjects.items():
+            print(f"{subject}:")
+            # Implement score calculation based on feedback levels
+            # For simplicity, assume scores are based on feedback levels
+            scores = {
+                "very poor": 1,
+                "poor": 2,
+                "good": 3,
+                "very good": 4,
+                "excellent": 5
+            }
+            total_score = sum(scores[feedback] for feedback in feedbacks)
+            average_score = total_score / len(feedbacks) if feedbacks else 0
+            print(f"Average score: {average_score:.2f}")
+            print()  # Empty line for better readability
+
 def main():
-    # Sample default data for students
-    students = {
-        "Alice": {
-            "Math": ["good", "very good"],
-            "Science": ["excellent", "good"]
-        },
-        "Bob": {
-            "Math": ["poor", "very poor"],
-            "History": ["good", "excellent"]
-        }
-    }
+    students = {}
 
-    print("\nStudent Feedback Manager")
-    print("1. Add Feedback")
-    print("2. View All Feedback")
-    print("3. Calculate Average Scores")
-    print("4. Exit")
+    # Adding default feedback for testing
+    default_students = [
+        {"name": "Alice", "subject": "Math", "feedback": "excellent"},
+        {"name": "Alice", "subject": "Science", "feedback": "very good"},
+        {"name": "Bob", "subject": "Math", "feedback": "good"},
+        {"name": "Bob", "subject": "Science", "feedback": "poor"},
+        {"name": "Charlie", "subject": "Math", "feedback": "very poor"},
+        {"name": "Charlie", "subject": "Science", "feedback": "good"},
+    ]
 
-    # We can simulate a choice by directly assigning a value to `choice`
-    choice = "2"  # For example, let's simulate the option to "View All Feedback"
+    for student in default_students:
+        add_feedback(students, student["name"], student["subject"], student["feedback"])
 
-    if choice == "1":
-        # Default data for adding feedback
-        student_name = "Charlie"
-        subject = "Math"
-        feedback_choice = "4"  # "Very Good"
-        
-        match feedback_choice:
-            case "1":
-                feedback = "very poor"
-            case "2":
-                feedback = "poor"
-            case "3":
-                feedback = "good"
-            case "4":
-                feedback = "very good"
-            case "5":
-                feedback = "excellent"
-            case _:
-                print("Invalid choice. Please choose again.")
-                return
-        
-        add_feedback(students, student_name, subject, feedback)
-    elif choice == "2":
-        if not students:
-            print("No feedback available.")
-        else:
-            # Simulating parameters for viewing feedback
-            student_name = "Alice"  # Specific student
-            subject = "Math"        # Specific subject
-            view_feedback(students, student_name, subject)
-    elif choice == "3":
-        if not students:
-            print("No feedback available.")
-        else:
-            score_calculator.calculate_average_score(students)
-            score_calculator.calculate_average_score_for_all_subjects(students)
-    elif choice == "4":
-        print("Exiting program.")
-        return
-    else:
-        print("Invalid choice. Please choose again.")
+    # Viewing feedback
+    print("\nDefault Feedback:")
+    view_feedback(students)
 
-# Function to get an empty student dictionary
-def get_empty_students_dict():
-    return {}
+    # Calculating average scores
+    print("\nCalculating Average Scores:")
+    calculate_average_score(students)
 
 if __name__ == "__main__":
     main()
