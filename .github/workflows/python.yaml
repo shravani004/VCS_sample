@@ -10,14 +10,19 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Run script with arguments
+      - name: Install expect
+        run: sudo apt-get update && sudo apt-get install expect -y
+      - name: Run script with expect
         run: |
-          for file in $(find . -name "*.py"); do
-            echo "Running $file"
-            # Example: Run with specific arguments
-            # python "$file" --action add --student John --subject Math --feedback 3
-            
-            # For testing purposes, you might want to run without arguments
-            # or ensure that the script handles missing arguments gracefully.
-            python "$file" --action view
-          done
+          expect -c "
+            spawn python your_script.py
+            expect \"Choose an option: \"
+            send \"1\r\"
+            expect \"Enter student name: \"
+            send \"John\r\"
+            expect \"Enter subject: \"
+            send \"Math\r\"
+            expect \"Enter choice (1-5): \"
+            send \"3\r\"
+            interact
+          "
