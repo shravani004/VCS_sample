@@ -38,65 +38,74 @@ def view_feedback(students, student_name=None, subject=None):
                     print(f"{i}. {feedback}")
                 print()  # Empty line for better readability
 
-students = {}
+def main():
+    students = {}
 
-while True:
-    print("\nStudent Feedback Manager")
-    print("1. Add Feedback")
-    print("2. View All Feedback")
-    print("3. Calculate Average Scores")
-    print("4. Exit")
+    while True:
+        try:
+            print("\nStudent Feedback Manager")
+            print("1. Add Feedback")
+            print("2. View All Feedback")
+            print("3. Calculate Average Scores")
+            print("4. Exit")
 
-    choice = input("Choose an option: ")
+            choice = input("Choose an option: ")
 
-    if choice == "1":
-        student_name = input("Enter student name: ")
-        subject = input("Enter subject: ")
-        print("Choose feedback level:")
-        print("1. Very Poor")
-        print("2. Poor")
-        print("3. Good")
-        print("4. Very Good")
-        print("5. Excellent")
-        feedback_choice = input("Enter choice (1-5): ")
-        
-        match feedback_choice:
-            case "1":
-                feedback = "very poor"
-            case "2":
-                feedback = "poor"
-            case "3":
-                feedback = "good"
-            case "4":
-                feedback = "very good"
-            case "5":
-                feedback = "excellent"
-            case _:
+            if choice == "1":
+                student_name = input("Enter student name: ")
+                subject = input("Enter subject: ")
+                print("Choose feedback level:")
+                print("1. Very Poor")
+                print("2. Poor")
+                print("3. Good")
+                print("4. Very Good")
+                print("5. Excellent")
+                feedback_choice = input("Enter choice (1-5): ")
+                
+                match feedback_choice:
+                    case "1":
+                        feedback = "very poor"
+                    case "2":
+                        feedback = "poor"
+                    case "3":
+                        feedback = "good"
+                    case "4":
+                        feedback = "very good"
+                    case "5":
+                        feedback = "excellent"
+                    case _:
+                        print("Invalid choice. Please choose again.")
+                        continue
+                
+                add_feedback(students, student_name, subject, feedback)
+            elif choice == "2":
+                if not students:
+                    print("No feedback available.")
+                else:
+                    student_name = input("Enter student name (leave blank for all): ")
+                    subject = input("Enter subject (leave blank for all): ")
+                    if student_name.strip() == "":
+                        student_name = None
+                    if subject.strip() == "":
+                        subject = None
+                    view_feedback(students, student_name, subject)
+            elif choice == "3":
+                if not students:
+                    print("No feedback available.")
+                else:
+                    score_calculator.calculate_average_score(students)
+                    score_calculator.calculate_average_score_for_all_subjects(students)
+            elif choice == "4":
+                break
+            else:
                 print("Invalid choice. Please choose again.")
-                continue
-        
-        add_feedback(students, student_name, subject, feedback)
-    elif choice == "2":
-        if not students:
-            print("No feedback available.")
-        else:
-            student_name = input("Enter student name (leave blank for all): ")
-            subject = input("Enter subject (leave blank for all): ")
-            if student_name.strip() == "":
-                student_name = None
-            if subject.strip() == "":
-                subject = None
-            view_feedback(students, student_name, subject)
-    elif choice == "3":
-        if not students:
-            print("No feedback available.")
-        else:
-            score_calculator.calculate_average_score(students)
-            score_calculator.calculate_average_score_for_all_subjects(students)
-    elif choice == "4":
-        break
-    else:
-        print("Invalid choice. Please choose again.")
+        except EOFError:
+            # Handle EOFError gracefully
+            print("\nEOFError detected: No input provided. Exiting program.")
+            break
+
+if __name__ == "__main__":
+    main()
 
 def get_empty_students_dict():
     return {}
