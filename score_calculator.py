@@ -37,3 +37,21 @@ def calculate_average_score_for_all_subjects(students):
             print(f"Overall average score for {student}: {average_score:.2f}")
         else:
             print(f"No valid feedback found for '{student}'.")
+
+def main():
+    students = {
+        "Alice": {
+            "Math": ["good", "very good", "excellent"],
+            "Science": ["poor", "good"]
+        },
+        "Bob": {
+            "Math": ["very poor", "poor"],
+            "Science": ["good", "very good"]
+        }
+    }
+
+    calculate_average_score(students)
+    calculate_average_score_for_all_subjects(students)
+
+if __name__ == "__main__":
+    main()
