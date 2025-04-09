@@ -34,7 +34,7 @@ def main():
         }
     }
 
-    query = input("Enter search query: ")
+    query = input("Enter search query:")
     results = search_feedback(students, query)
     
     if results:
