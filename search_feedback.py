@@ -1,48 +1,35 @@
-def search_feedback(students, query):
-    """
-    Searches for feedback matching the given query across all students and subjects.
-
-    Parameters:
-    - students (dict): Dictionary containing student feedback data.
-    - query (str): Search query to look for in feedback strings.
-
-    Returns:
-    - list: List of dictionaries containing student name, subject, and matching feedback.
-    """
-    results = []
-    for student, subjects in students.items():
-        for subject, feedbacks in subjects.items():
-            for feedback in feedbacks:
-                if query.lower() in feedback.lower():
-                    results.append({
-                        "student": student,
-                        "subject": subject,
-                        "feedback": feedback
-                    })
-    return results
+def search_feedback_by_name_and_count(feedback_file="feedback_data.txt"):
+    matching_feedback = []
+    total_entries = 0
+    try:
+        with open(feedback_file, "r") as f:
+            for line in f:
+                total_entries += 1
+                name, _, comment = line.strip().split(",", 2)
+                if search_term.lower() in name.lower():
+                    matching_feedback.append(line.strip())
+    except FileNotFoundError:
+        return [], 0
+    return matching_feedback, total_entries
 
 def main():
-    # Example usage with sample data
-    students = {
-        "Alice": {
-            "Math": ["good", "very good", "excellent"],
-            "Science": ["poor", "good"]
-        },
-        "Bob": {
-            "Math": ["very poor", "poor"],
-            "Science": ["good", "very good"]
-        }
-    }
-
-    query = input("Enter search query:")
-    results = search_feedback(students, query)
-    
-    if results:
-        print(f"Search results for '{query}':")
-        for result in results:
-            print(f"Student: {result['student']}, Subject: {result['subject']}, Feedback: {result['feedback']}")
+    global search_term
+    search_term = input("Enter name to search (leave blank for all): ")
+    if search_term.strip() == "":
+        search_term = ""  # Ensure empty string for all feedback
+    results, total = search_feedback_by_name_and_count()
+    print(f"\nTotal Feedback Entries: {total}")
+    if search_term:
+        print(f"Feedback matching '{search_term}':")
+        if results:
+            for entry in results:
+                print(f"- {entry}")
+        else:
+            print("No feedback found for that name.")
     else:
-        print(f"No feedback found matching '{query}'.")
+        print("All Feedback:")
+        for entry in results:
+            print(f"- {entry}")
 
 if __name__ == "__main__":
     main()
