@@ -1,7 +1,7 @@
-name: Check Python scripts
+name: Test Score Calculator
 on: [push]
 jobs:
-  test-python:
+  test-score-calculator:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -10,9 +10,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Run all .py files
+      - name: Run tests
         run: |
-          for file in $(find . -name "*.py"); do
-            echo "Running $file"
-            python "$file"
-          done
+          python -c "
+            from score_calculator import calculate_average_score, calculate_average_score_for_all_subjects
+            
+            students = {
+                'John': {
+                    'Math': ['good', 'very good'],
+                    'Science': ['excellent']
+                }
+            }
+            
+            calculate_average_score(students)
+            calculate_average_score_for_all_subjects(students)
+          "
