@@ -1,0 +1,36 @@
+name: Test Search Feedback
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test_search:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get code
+      uses: actions/checkout@v4
+
+    - name: Use Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Make fake feedback file
+      run: |
+        echo "Alice,5,Good" > feedback_data.txt
+        echo "Bob,3,Okay" >> feedback_data.txt
+        echo "Alice,4,Cool" >> feedback_data.txt
+
+    - name: Run search and check count
+      run: |
+        output=$(python -c "import feedback_search; results, total = feedback_search.search_feedback_by_name_and_count(search_name='Alice'); print(f'Found: {len(results)}, Total: {total}')")
+        echo "Search result: $output"
+        if [[ "$output" == "Found: 2, Total: 3" ]]; then
+          echo "Search test passed!"
+        else
+          echo "Search test failed!"
+          exit 1
+        fi
